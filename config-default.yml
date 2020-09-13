@@ -1,3 +1,5 @@
+# most data here is unused, but might be helpful in the future
+
 bot:
   prefix:   '.m'
   token:    !ENV "BOT_TOKEN"
@@ -11,7 +13,7 @@ style:
 
   emojis:
     status_online:  "<:greenCheck:554610205271392259>"
-    status_offline:  "<:whiteX:554609416285061120>"
+    status_offline:  ":x:"
 
 
 guild:
@@ -19,7 +21,7 @@ guild:
 
   channels:
     # Reretools - devlog
-    dev_log:                  754463981216727162
+    dev_log:                  754716652968607813
 
     welcome:                  594824222099111943
     gate:                     594833323348459530
@@ -74,6 +76,10 @@ guild:
     # nitrobooster:
     tft:                      694573072627269642
     valorant:                 700800403188613130
+    # AmongUs:
+    # OWPvP:
+    # League:
+
 
   moderation_roles:
     - *MODS_ROLE

@@ -9,7 +9,7 @@ client = discord.Client
 
 
 class MoocahBot(client):
-    """"""
+    """A simplistic bot that has a 0.01% change of responding to any message with 'cunt.'"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,14 +24,18 @@ class MoocahBot(client):
         if msg.content == '.m':
             if any(role.id in constants.MODERATION_ROLES for role in msg.author.roles):
                 self.active = not self.active
-                print(f'toggled to {self.active}')
+                if not self.active:
+                    emote = constants.Style.Emojis.status_offline
+                else:
+                    emote = constants.Style.Emojis.status_online
+                await msg.channel.send('Toggled to ')
+                print(f'toggled to {emote}')
                 return
         elif not self.active:
             return
-        else:
-            roll = randbelow(1000)
-            if not roll:
-                await msg.channel.send(f'{msg.author.mention} Cunt.')
+        roll = randbelow(1000)
+        if not roll:
+            await msg.channel.send(f'{msg.author.mention} Cunt.')
 
 
 bot = MoocahBot(
