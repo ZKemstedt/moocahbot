@@ -15,7 +15,7 @@ import logging
 import os
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 import yaml
 
