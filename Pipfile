@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+discord-py = "~=1.4.0"
+pyyaml = "~=5.1"
+
+[requires]
+python_version = "3.8"
+
+[scripts]
+start = "python -m bot"

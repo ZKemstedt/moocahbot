@@ -1,0 +1,86 @@
+bot:
+  prefix:   '.m'
+  token:    !ENV "BOT_TOKEN"
+
+
+style:
+  colours:
+    soft_red: 0xcd6d6d
+    soft_green: 0x68c290
+    soft_orange: 0xf9cb54
+
+  emojis:
+    status_online:  "<:greenCheck:554610205271392259>"
+    status_offline:  "<:whiteX:554609416285061120>"
+
+
+guild:
+  id: 594824222099111937
+
+  channels:
+    # Reretools - devlog
+    dev_log:                  754463981216727162
+
+    welcome:                  594824222099111943
+    gate:                     594833323348459530
+
+    # Guild management
+    officer_lounge:            594828641050034185
+    discord_documentation:     604762513300783104
+    announcements_history:     604744337179279410
+    signups_history:           596068682711433245
+    changelog:                 605137470530519089
+    officer_archive:           667525859732881469
+
+    # Announcements
+    announcements:             594828745462775823
+    attendance_signup:         594829613729972226
+    alliance_announcements:    710618450191450152
+
+    # Important
+    gear:                      594829519953723395
+    help_and_rules:            594829294107230208
+
+    # Remedy
+    guild_chat:                594828719147843584
+    nodewar_pvp:               594829258132684810
+    alliance_chat:             640588171049959464
+    nodewar_cannons:           648117733787041792
+    guild_wars_and_missions:   594829494842294293
+    bots:                      594829537666138135
+    useful_stuff:              594829563796652044
+    sorted_useful_stuff:       692150725693931530
+
+    # Public - bot does not have access to these channels anyway
+    # general:                   594829807976579083
+    # other_games:               594830903780311065
+    # screenshots:               594830948198252555
+    # memes:                     594830924051513344
+
+
+  roles:
+    # Reretools --
+    admin:      &RERE_ROLE    365920968310521866
+    # dev:      &DEV_ROLE
+    # Remedy --
+    gm:                       594826694385336320
+    officers:   &MODS_ROLE    594826730590437398
+    bots:                     594826936396808209
+    muted:                    667517282037137409
+    members:                  594826907476819969
+    alliance:                 640587810042019851
+    reminder:                 597838727829651456
+    public:                   594827446562455552
+    # nitrobooster:
+    tft:                      694573072627269642
+    valorant:                 700800403188613130
+
+  moderation_roles:
+    - *MODS_ROLE
+    - *RERE_ROLE
+
+config:
+  required_keys: ['bot.token']
+
+
+# https://github.com/python-discord/bot/blob/master/config-default.yml
