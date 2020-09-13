@@ -21,12 +21,13 @@ class MoocahBot(client):
     async def on_message(self, msg: discord.Message) -> None:
         if msg.author.bot:
             return
+        if msg.content == '.m':
+            if any(role.id in constants.MODERATION_ROLES for role in msg.author.roles):
+                self.active = not self.active
+                print(f'toggled to {self.active}')
+                return
         elif not self.active:
             return
-        elif (any(role in constants.MODERATION_ROLES for role in msg.author.roles)
-              and msg.content == '.m'):
-            self.active = not self.active
-            print(f'toggled to {self.active}')
         else:
             roll = randbelow(1000)
             if not roll:
