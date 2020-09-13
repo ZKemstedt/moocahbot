@@ -1,16 +1,22 @@
+import logging
 import discord
 import constants
 from secrets import randbelow
 
 allowed_roles = [discord.Object(id_) for id_ in constants.MODERATION_ROLES]
 
+client = discord.Client
 
-class MoocahBot(discord.client):
+
+class MoocahBot(client):
     """"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.active = True
+
+    async def on_ready(self):
+        print('ready!')
 
     async def on_message(self, msg: discord.Message) -> None:
         if msg.author.bot:
@@ -20,8 +26,9 @@ class MoocahBot(discord.client):
         elif (any(role in constants.MODERATION_ROLES for role in msg.author.roles)
               and msg.content == '.m'):
             self.active = not self.active
+            print(f'toggled to {self.active}')
         else:
-            roll = randbelow(10)
+            roll = randbelow(1000)
             if not roll:
                 await msg.channel.send(f'{msg.author.mention} Cunt.')
 
