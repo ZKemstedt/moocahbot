@@ -11,4 +11,4 @@ pyyaml = "~=5.1"
 python_version = "3.8"
 
 [scripts]
-start = "python -m bot"
+start = "python3 bot.py"
