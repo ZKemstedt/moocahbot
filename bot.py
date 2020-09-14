@@ -1,4 +1,3 @@
-import logging
 import discord
 import constants
 from secrets import randbelow
@@ -28,11 +27,12 @@ class MoocahBot(client):
                     emote = constants.Style.Emojis.status_offline
                 else:
                     emote = constants.Style.Emojis.status_online
-                await msg.channel.send('Toggled to ')
-                print(f'toggled to {emote}')
+                await msg.channel.send(f'Toggled to {emote}')
+                # print(f'toggled to {emote}')
                 return
         elif not self.active:
             return
+
         roll = randbelow(1000)
         if not roll:
             await msg.channel.send(f'{msg.author.mention} Cunt.')
