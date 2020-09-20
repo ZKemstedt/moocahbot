@@ -1,3 +1,33 @@
-config.yml
+# Byte-compiled / optimized / DLL files
+*__pycache__/
+*.py[cod]
+.mypy_cache/
+
+# Google API Credentials
+bot/cogs/apitest.py
+apitest/
+credentials.json
+token.pickle
+
+# Local data
+data/
+bot/resources/
+
+# pipenv
+Pipfile.lock
+
+# virtualenv
 .env
-Pipfile.Lock
+.venv
+venv/
+ENV/
+
+# Logfiles
+log.*
+logs/
+
+# Custom user configuration
+config.yml
+
+# Mac OS .DS_Store, which is a file that stores custom attributes of its containing folder
+.DS_Store
