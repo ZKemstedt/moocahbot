@@ -40,6 +40,7 @@ class MoocahBot(discord.Client):
     async def on_message(self, msg: discord.Message) -> None:
         if msg.author.bot:
             return
+
         if msg.content == '.m':
             if any(role.id in constants.MODERATION_ROLES for role in msg.author.roles):
                 self.active = not self.active
@@ -49,15 +50,63 @@ class MoocahBot(discord.Client):
                     emote = constants.Style.Emojis.status_online
                 await msg.channel.send(f'Toggled to {emote}')
                 return
+
         elif msg.content == '.mstats':
             await msg.channel.send(f'{len(self.data)} cunts have been told off.')
             return
+
+        elif msg.content == '.mrank':
+            cunts = get_biggest_cunts(self.data)
+            str_cunts = {}
+            for _id, count in cunts.items():
+                user = self.get_user(_id)
+                if user is None:
+                    try:
+                        username = self.fetch_user(_id).display_name
+                    except NotFound:
+                        username = f'{_id}'
+                    except HTTPException as e:
+                        username = f'{_id}'
+                else:
+                    username = user.display_name
+                str_cunts[username] = count
+            await msg.channel.send('\n'.join([f'{name}: {count}' for name, count in str_cunts]))
+
         elif not self.active:
             return
+
         roll = randbelow(1000)
         if not roll:
             self.data.append(msg.author.id)
             await msg.channel.send(f'{msg.author.mention} Cunt.')
+
+
+def get_biggest_cunts(stats) -> str:
+    # biggest cunts
+    cunt_list = {}
+    for cunt in stats:
+        if not cunt.isdigit():
+            continue
+        else:
+            cunt = int(cunt)
+        if cunt in cunt_list:
+            cunt_list[cunt] += 1
+        else:
+            cunt_list[cunt] = 1
+            
+    sorted_cunts = {k: v for k, v in sorted(cunt_list.items(), key=lambda item: item[1])}
+    
+    return sorted_cunts
+
+# - Leineth | A z r e e
+# - Leineth | A z r e e
+# - Schulky
+# - Leineth | A z r e e
+# - Glyphe
+# - Schulky
+# - Leineth | A z r e e
+# - Moocah | Melon
+# - Uchaguzi | Ucha
 
 
 bot = MoocahBot(
