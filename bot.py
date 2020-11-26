@@ -3,7 +3,7 @@ import yaml
 import discord
 import constants
 from secrets import randbelow
-from discord.errors import NotFound
+from discord.errors import NotFound, HTTPException
 
 allowed_roles = [discord.Object(id_) for id_ in constants.MODERATION_ROLES]
 filename = 'stats.yml'
