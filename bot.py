@@ -85,10 +85,8 @@ def get_biggest_cunts(stats) -> str:
     # biggest cunts
     cunt_list = {}
     for cunt in stats:
-        if not cunt.isdigit():
+        if not isinstance(cunt, int):
             continue
-        else:
-            cunt = int(cunt)
         if cunt in cunt_list:
             cunt_list[cunt] += 1
         else:
