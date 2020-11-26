@@ -72,7 +72,7 @@ class MoocahBot(discord.Client):
                 else:
                     username = user.display_name
                 str_cunts[username] = count
-            await msg.channel.send('\n'.join([f'{name}: {count}' for name, count in str_cunts]))
+            await msg.channel.send('\n'.join([f'{name}: {count}' for name, count in str_cunts.items()]))
 
         elif not self.active:
             return
