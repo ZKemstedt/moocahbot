@@ -56,7 +56,7 @@ class MoocahBot(discord.Client):
 
         elif msg.content == '.mrank':
             cunt_data = get_biggest_cunts(self.data)
-            cunt_names = self.get_cunt_names(cunts)
+            cunt_names = await self.get_cunt_names(cunts)
             sorted_cunts = dict(sorted(cunt_names.items(), key=lambda item: item[1], reverse=True))
             cunt_str = '\n'.join([f'(*{i}: *{count}) {name}' for i, name, count in enumerate(str_cunts.items())])
             await msg.channel.send(cunt_str)
@@ -67,7 +67,7 @@ class MoocahBot(discord.Client):
                 self.data.append(msg.author.id)
                 await msg.channel.send(f'{msg.author.mention} Cunt.')
     
-    def get_cunt_names(self, cunts):
+    async def get_cunt_names(self, cunts):
         str_cunts = {}
         for _id, count in cunts.items():
             user = self.get_user(_id)
