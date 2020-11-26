@@ -58,7 +58,7 @@ class MoocahBot(discord.Client):
             cunt_data = get_biggest_cunts(self.data)
             cunt_names = await self.get_cunt_names(cunt_data)
             sorted_cunts = dict(sorted(cunt_names.items(), key=lambda item: item[1], reverse=True))
-            cunt_str = '\n'.join([f'(*{i}: *{c[1]}) {c[0]}' for i, c in enumerate(sorted_cunts.items())])
+            cunt_str = '\n'.join([f'(**{i+1}**: {c[1]}) {c[0]}' for i, c in enumerate(sorted_cunts.items())])
             await msg.channel.send(cunt_str)
 
         elif self.active:
