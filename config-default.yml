@@ -62,12 +62,13 @@ guild:
 
   roles:
     # Reretools --
-    admin:      &RERE_ROLE    365920968310521866
+    admin:      &RERETOOLS    365920968310521866
     # dev:      &DEV_ROLE
     # Remedy --
     gm:                       594826694385336320
     officers:   &MODS_ROLE    594826730590437398
     bots:                     594826936396808209
+    technician: &RERE_ROLE    755105835839127582
     muted:                    667517282037137409
     members:                  594826907476819969
     alliance:                 640587810042019851
@@ -82,6 +83,7 @@ guild:
 
 
   moderation_roles:
+    - *RERETOOLS
     - *MODS_ROLE
     - *RERE_ROLE
 
