@@ -63,7 +63,7 @@ class MoocahBot(discord.Client):
                 user = self.get_user(_id)
                 if user is None:
                     try:
-                        username = self.fetch_user(_id).display_name
+                        username = await self.fetch_user(_id).display_name
                     except NotFound:
                         username = f'{_id}'
                     except HTTPException as e:
