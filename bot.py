@@ -50,63 +50,55 @@ class MoocahBot(discord.Client):
                 else:
                     emote = constants.Style.Emojis.status_online
                 await msg.channel.send(f'Toggled to {emote}')
-                return
 
         elif msg.content == '.mstats':
             await msg.channel.send(f'{len(self.data)} cunts have been told off.')
-            return
 
         elif msg.content == '.mrank':
-            cunts = get_biggest_cunts(self.data)
-            str_cunts = {}
-            for _id, count in cunts.items():
-                user = self.get_user(_id)
-                if user is None:
-                    try:
-                        username = await self.fetch_user(_id)
-                        username = username.display_name
-                    except NotFound:
-                        username = f'{_id}'
-                    except HTTPException as e:
-                        username = f'{_id}'
-                else:
-                    username = user.display_name
-                str_cunts[username] = count
-            await msg.channel.send('\n'.join([f'{name}: {count}' for name, count in str_cunts.items()]))
+            cunt_data = get_biggest_cunts(self.data)
+            cunt_names = self.get_cunt_names(cunts)
+            sorted_cunts = dict(sorted(cunt_names.items(), key=lambda item: item[1], reverse=True))
+            cunt_str = '\n'.join([f'(*{i}: *{count}) {name}' for i, name, count in enumerate(str_cunts.items())])
+            await msg.channel.send(cunt_str)
 
-        elif not self.active:
-            return
+        elif self.active:
+            roll = randbelow(1000)
+            if not roll:
+                self.data.append(msg.author.id)
+                await msg.channel.send(f'{msg.author.mention} Cunt.')
+    
+    def get_cunt_names(self, cunts):
+        str_cunts = {}
+        for _id, count in cunts.items():
+            user = self.get_user(_id)
+            if user is None:
+                try:
+                    username = await self.fetch_user(_id)
+                    username = username.display_name
+                except NotFound:
+                    username = f'{_id}'
+                except HTTPException as e:
+                    username = f'{_id}'
+            else:
+                username = user.display_name
+            str_cunts[username] = count
+        return str_cunts
 
-        roll = randbelow(1000)
-        if not roll:
-            self.data.append(msg.author.id)
-            await msg.channel.send(f'{msg.author.mention} Cunt.')
 
 
 def get_biggest_cunts(stats) -> str:
     # biggest cunts
     cunt_list = {}
     for cunt in stats:
-        if not isinstance(cunt, int):
-            continue
         if cunt in cunt_list:
             cunt_list[cunt] += 1
         else:
             cunt_list[cunt] = 1
+    return cunt_list
             
-    sorted_cunts = {k: v for k, v in sorted(cunt_list.items(), key=lambda item: item[1])}
+    # sorted_cunts = {k: v for k, v in sorted(cunt_list.items(), key=lambda item: item[1])}
     
-    return sorted_cunts
-
-# - Leineth | A z r e e
-# - Leineth | A z r e e
-# - Schulky
-# - Leineth | A z r e e
-# - Glyphe
-# - Schulky
-# - Leineth | A z r e e
-# - Moocah | Melon
-# - Uchaguzi | Ucha
+    # return sorted_cunts
 
 
 bot = MoocahBot(
