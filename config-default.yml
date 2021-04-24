@@ -12,7 +12,7 @@ style:
     soft_orange: 0xf9cb54
 
   emojis:
-    status_online:  "<:greenCheck:554610205271392259>"
+    status_online:  "\u2705"
     status_offline:  ":x:"
 
 
@@ -59,7 +59,6 @@ guild:
     # screenshots:               594830948198252555
     # memes:                     594830924051513344
 
-
   roles:
     # Reretools --
     admin:      &RERETOOLS    365920968310521866
@@ -71,16 +70,9 @@ guild:
     technician: &RERE_ROLE    755105835839127582
     muted:                    667517282037137409
     members:                  594826907476819969
-    alliance:                 640587810042019851
-    reminder:                 597838727829651456
+    # reminder:                 597838727829651456
     public:                   594827446562455552
     # nitrobooster:
-    tft:                      694573072627269642
-    valorant:                 700800403188613130
-    # AmongUs:
-    # OWPvP:
-    # League:
-
 
   moderation_roles:
     - *RERETOOLS

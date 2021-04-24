@@ -1,6 +1,7 @@
 from pathlib import Path
 import yaml
 import discord
+import asyncio
 import constants
 from secrets import randbelow
 from discord.errors import NotFound, HTTPException
@@ -14,7 +15,7 @@ class MoocahBot(discord.Client):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.active = True
+        self.active = False
 
         # load stats from statfile
         # Check if the file exists, create if it not
@@ -22,18 +23,11 @@ class MoocahBot(discord.Client):
         if not file.exists():
             print(f"Creating {filename}")
             file.touch()
-            self.data = []
+            self.data = {}
         else:
             # load data
             with open(filename, encoding="UTF-8") as f:
                 self.data = yaml.safe_load(f)
-
-    async def close(self):
-        """Overrides the client.close() method to also save stats."""
-        # sava data
-        with open(filename, 'w', encoding="UTF-8") as f:
-            yaml.dump(self.data, f)
-        await super().close()
 
     async def on_ready(self):
         print('ready!')
@@ -42,63 +36,88 @@ class MoocahBot(discord.Client):
         if msg.author.bot:
             return
 
-        if msg.content == '.m':
-            if any(role.id in constants.MODERATION_ROLES for role in msg.author.roles):
+        # if msg.content == '.mstats':
+        #     await msg.channel.send(f'{len(self.data)} cunts have been told off.')
+
+        if msg.content == '.mrank':
+            await self.display_rank(msg)
+
+        elif msg.content.startswith('.m'):
+            if not any(role.id in constants.MODERATION_ROLES for role in msg.author.roles):
+                msg.channel.send("Permission Denied.")
+                return
+
+            if msg.content == '.m':
                 self.active = not self.active
                 if not self.active:
-                    emote = constants.Style.Emojis.status_offline
+                    emote = constants.Emojis.status_offline
                 else:
-                    emote = constants.Style.Emojis.status_online
+                    emote = constants.Emojis.status_online
                 await msg.channel.send(f'Toggled to {emote}')
 
-        elif msg.content == '.mstats':
-            await msg.channel.send(f'{len(self.data)} cunts have been told off.')
+            elif msg.content.startswith('.mset'):
+                await self.set_stats(msg)
 
-        elif msg.content == '.mrank':
-            cunt_data = get_biggest_cunts(self.data)
-            cunt_names = await self.get_cunt_names(cunt_data)
-            sorted_cunts = dict(sorted(cunt_names.items(), key=lambda item: item[1], reverse=True))
-            cunt_str = '\n'.join([f'**({f"{i+1}".rjust(2, "0")})**: ({c[1]}) {c[0]}' for i, c in enumerate(sorted_cunts.items())])
-            await msg.channel.send(cunt_str)
+            # elif msg.content.startswith('.mid'):
+            #     await self.get_ids(msg)
 
         elif self.active:
-            roll = randbelow(1000)
-            if not roll:
-                self.data.append(msg.author.id)
-                await msg.channel.send(f'{msg.author.mention} Cunt.')
-    
-    async def get_cunt_names(self, cunts):
-        str_cunts = {}
-        for _id, count in cunts.items():
-            user = self.get_user(_id)
-            if user is None:
-                try:
-                    username = await self.fetch_user(_id)
-                    username = username.display_name
-                except NotFound:
-                    username = f'{_id}'
-                except HTTPException as e:
-                    username = f'{_id}'
-            else:
-                username = user.display_name
-            str_cunts[username] = count
-        return str_cunts
+            await self.roll_cunt(msg)
 
-
-
-def get_biggest_cunts(stats) -> str:
-    # biggest cunts
-    cunt_list = {}
-    for cunt in stats:
-        if cunt in cunt_list:
-            cunt_list[cunt] += 1
+    async def set_stats(self, msg: discord.Message):
+        _id = msg.mentions[0].id
+        name = msg.mentions[0].display_name
+        new_count = int(msg.content.split(' ')[1])  # .mset 5
+        res = f"Target:  {name}  (`{_id}`) "
+        if _id in self.data:
+            res += f"Before: {self.data[_id]}    After: {new_count}"
         else:
-            cunt_list[cunt] = 1
-    return cunt_list
-            
-    # sorted_cunts = {k: v for k, v in sorted(cunt_list.items(), key=lambda item: item[1])}
-    
-    # return sorted_cunts
+            res += f"Before: NULL    After: {new_count}"
+        test = await msg.channel.send(res)
+        await test.add_reaction(constants.Emojis.status_online)
+
+        def check(reaction, user):
+            return user == msg.author and str(reaction.emoji) == constants.Emojis.status_online
+        try:
+            reaction, user = await self.wait_for('reaction_add', timeout=30.0, check=check)
+        except asyncio.TimeoutError:
+            await test.delete()
+        else:
+            self.data[_id] = new_count
+            # save to disk
+            with open(filename, 'w', encoding="UTF-8") as f:
+                yaml.dump(self.data, f)
+
+    async def display_rank(self, msg: discord.Message):
+        rank = await self.get_rank()
+        rank_str = '\n'.join([f'**({f"{i+1}".rjust(2, "0")})**: ({c[1]}) {c[0]}' for i, c in enumerate(rank.items())])
+        await msg.channel.send(rank_str)
+
+    async def get_rank(self):
+        # replace ids with names
+        rank_named = {}
+        for _id, count in self.data.items():
+            user = self.get_user(_id)
+            if user:
+                name = user.display_name
+            else:
+                try:
+                    name = await self.fetch_user(_id).display_name
+                except (NotFound, HTTPException):
+                    name = f'{_id}'
+            rank_named[name] = count
+
+        # sort
+        return dict(sorted(rank_named.items(), key=lambda item: item[1], reverse=True))
+
+    async def roll_cunt(self, msg: discord.Message):
+        roll = randbelow(1000)
+        if not roll:
+            await msg.channel.send(f'{msg.author.mention} Cunt.')
+            self.data[msg.author.id] += 1
+            # save to disk
+            with open(filename, 'w', encoding="UTF-8") as f:
+                yaml.dump(self.data, f)
 
 
 bot = MoocahBot(
